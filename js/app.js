@@ -331,12 +331,44 @@ const App = {
         this.elements.optionsContainer.innerHTML = '';
 
         try {
-            // Fetch questions
+            // Fetch questions (Web receives ~50, Android ~10)
             const response = await API.getQuestions();
-            // Expect: { questions: [ { id, question, optionA, optionB... , correctAnswer }, ... ] }
 
             if (response && response.questions && response.questions.length > 0) {
-                this.state.game.questions = response.questions;
+                let pool = response.questions;
+
+                // --- Client-side filtering for duplicates ---
+                const recentkey = 'kambia_recent_questions';
+                let recentIds = [];
+                try {
+                    recentIds = JSON.parse(localStorage.getItem(recentkey) || '[]');
+                } catch (e) { recentIds = []; }
+
+                // Filter out recently seen questions
+                let questions = pool.filter(q => !recentIds.includes(q.id));
+
+                // If we ran out of unique questions, fallback to the pool (or mix)
+                if (questions.length < 10) {
+                    // Start filling with pool items that are not already in 'questions'
+                    // Ideally, we just take the pool, maybe shuffle again? 
+                    // For simplicity, just concat the rest of pool to ensure we have 10
+                    // (The filter might have removed too many)
+                    // We prioritize 'questions' (unseen) then fill with 'pool' (seen)
+                    const needed = 10 - questions.length;
+                    const remaining = pool.filter(q => !questions.includes(q));
+                    questions = questions.concat(remaining.slice(0, needed));
+                }
+
+                // Take exactly 10
+                questions = questions.slice(0, 10);
+
+                // Update history
+                const newIds = questions.map(q => q.id);
+                // Keep last 40 IDs (approx 4 games) in history
+                let improvedHistory = [...newIds, ...recentIds].slice(0, 40);
+                localStorage.setItem(recentkey, JSON.stringify(improvedHistory));
+
+                this.state.game.questions = questions;
                 this.loadNextQuestion();
             } else {
                 throw new Error("No questions returned");
@@ -464,18 +496,21 @@ const App = {
     },
 
     handleCheatAttempt() {
-        // STOP EVERYTHING
-        VideoPlayer.stopVideo();
+        // STOP EVERYTHING IMMEDIATELY
+        VideoPlayer.stopVideo(); // Force hide overlay
         clearInterval(this.state.game.timer);
+        this.state.game.isOver = true;
+        this.state.game.canAnswer = false;
+
+        // Hide game screen instantly to prevent interaction
+        this.elements.gameScreen.classList.add('hidden');
 
         this.elements.cheatWarning.classList.remove('hidden');
         this.elements.cheatMsg.textContent = "Actividad sospechosa detectada. Partida cancelada.";
 
-        // Expel user after brief warning
+        // Expel user and reload to clear state
         setTimeout(() => {
-            this.elements.cheatWarning.classList.add('hidden');
-            this.resetGame();
-            window.location.reload(); // Force reload to clear state cleanly
+            window.location.reload();
         }, 3000);
     },
 
