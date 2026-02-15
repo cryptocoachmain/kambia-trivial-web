@@ -3,7 +3,7 @@
  */
 
 const API = {
-    BASE_URL: 'https://script.google.com/macros/s/AKfycbwVKblSHJunaZ9UCn69izZ1Yr3ErxBpilsGXe65_oH19c0q4uxNR4En-rUMOLZTkOVTYg/exec',
+    BASE_URL: 'https://script.google.com/macros/s/AKfycbwXy3toGNJJBIdYtu1RWawgN71s05Z3zzjCu97QHvDpA99Xlp6SLfyO9jQqYubeq7Vvfw/exec',
 
     async _request(action, data = {}) {
         // Use GET for data fetching to avoid CORS preflight issues with simple requests
