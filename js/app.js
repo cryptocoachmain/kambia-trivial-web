@@ -111,6 +111,16 @@ const App = {
         document.getElementById('view-full-ranking-btn').addEventListener('click', () => this.showFullRanking());
         document.getElementById('close-full-ranking-btn').addEventListener('click', () => this.showScreen('home-screen'));
 
+        // Android App Install
+        const installBtn = document.getElementById('show-android-install-btn');
+        if (installBtn) {
+            installBtn.addEventListener('click', () => this.showScreen('android-install-screen'));
+        }
+        const cancelInstallBtn = document.getElementById('android-cancel-btn');
+        if (cancelInstallBtn) {
+            cancelInstallBtn.addEventListener('click', () => this.showScreen('home-screen'));
+        }
+
         this.elements.backHomeBtn.addEventListener('click', () => {
             this.resetGame();
             this.loadRankings(); // Refresh rankings after game
