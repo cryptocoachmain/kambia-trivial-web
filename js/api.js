@@ -63,7 +63,7 @@ const API = {
     },
 
     async uploadScore(phone, team, score, correct, total) {
-        return this._request('upload_score', {
+        return this._request('upload', {
             telefono: phone,
             equipo: team,
             puntos: score,
@@ -73,7 +73,7 @@ const API = {
     },
 
     async getRanking() {
-        return this._request('read_scores');
+        return this._request('get_scores');
     },
 
     async getMessages() {
