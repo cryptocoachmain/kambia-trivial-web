@@ -171,7 +171,8 @@ const App = {
             const result = await API.getMessages();
             // Expected format: { messages: ["msg1", "msg2"] }
             if (result && result.messages && Array.isArray(result.messages)) {
-                this.state.adminMessages = result.messages;
+                // API returns objects like { message: "text" }, extract just the text
+                this.state.adminMessages = result.messages.map(m => m.message || m);
             } else {
                 this.state.adminMessages = ["Bienvenido al Trivial de Kambia.", "Responde correctamente para sumar puntos."];
             }
