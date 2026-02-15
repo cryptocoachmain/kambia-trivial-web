@@ -72,8 +72,9 @@ const API = {
         });
     },
 
-    async getRanking() {
-        return this._request('get_scores');
+    async getRanking(phone = "") {
+        const data = phone ? { telefono: phone } : {};
+        return this._request('get_scores', data);
     },
 
     async getMessages() {
