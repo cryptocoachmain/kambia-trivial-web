@@ -488,7 +488,7 @@ const App = {
         this.state.game.canAnswer = true;
 
         clearInterval(this.state.game.timer);
-        const step = 100 / (this.CONSTANTS.QUESTION_TIME_MS / 100); // update every 100ms
+        const step = 100 / (this.CONSTANTS.QUESTION_TIME_MS / 100);
 
         this.state.game.timer = setInterval(() => {
             this.state.game.timeLeft -= step;
@@ -518,18 +518,7 @@ const App = {
 
         const isCorrect = selectedKey.toLowerCase() === correctKey.toLowerCase();
 
-        // Determine video to play
-        const videoFile = isCorrect ? 'assets/correct.mp4' : 'assets/wrong.mp4';
-
-        // Play video immediately
-        VideoPlayer.play(videoFile, false, () => {
-            // After video ends, show UI feedback and proceed
-            this.processAnswerResult(selectedKey, correctKey, isCorrect);
-        });
-    },
-
-    processAnswerResult(selectedKey, correctKey, isCorrect) {
-        // Highlight options
+        // 1. VISUAL FEEDBACK FIRST
         const buttons = this.elements.optionsContainer.querySelectorAll('.option-btn');
         buttons.forEach(btn => {
             if (btn.dataset.key === correctKey) btn.classList.add('correct');

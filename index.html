@@ -62,12 +62,12 @@
                     <p class="small-text">(donar, fundaciones, organizaciones sin ánimo de lucro...)</p>
                 </div>
 
-                <div class="card transparent">
-                    <p class="label">PATROCINADO POR</p>
-                    <p>Aquí puede ir su publicidad</p>
-                </div>
+                <button id="start-app-btn" class="btn primary">EMPEZAR</button>
 
-                <button id="start-app-btn" class="btn primary">JUGAR</button>
+                <div class="sponsored-box">
+                    <p class="label">PATROCINADO POR</p>
+                    <p class="content">MADERAS ALTO EBRO</p>
+                </div>
             </div>
         </section>
 
@@ -151,9 +151,9 @@
                 </div>
 
                 <!-- Sponsored By -->
-                <div class="card transparent">
+                <div class="sponsored-box">
                     <p class="label">PATROCINADO POR</p>
-                    <p>Aquí puede ir su publicidad</p>
+                    <p class="content">MADERAS ALTO EBRO</p>
                 </div>
 
                 <button id="play-game-btn" class="btn primary">JUGAR AL TRIVIAL</button>
@@ -191,13 +191,10 @@
 
         <!-- GAME SCREEN -->
         <section id="game-screen" class="screen hidden">
-            <div class="game-header">
-                <div class="timer-bar">
-                    <div id="timer-progress" class="progress"></div>
-                </div>
-                <div class="stats-row">
-                    <span>Pregunta <span id="current-question-num">1</span>/10</span>
-                    <span>Puntos: <span id="current-score">0</span></span>
+            <div class="header-bar">
+                <div class="timer-display" id="timer-display">15</div>
+                <div class="question-counter" style="font-weight: bold; color: var(--kambia-green);">
+                    Pregunta <span id="current-question-num">1</span>/10
                 </div>
             </div>
 
