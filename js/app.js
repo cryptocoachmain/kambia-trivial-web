@@ -242,7 +242,7 @@ const App = {
                 }).join('');
             }
 
-            // 2. CLASIFICACIÓN TOTAL (Global online ranking)
+            // 2. CLASIFICACIÓN TOTAL (Global online ranking, SORTED)
             const globalList = document.getElementById('global-ranking-list');
             if (globalList && result.global) {
                 const teams = [
@@ -251,13 +251,17 @@ const App = {
                     { name: 'Avila', key: 'Avila', color: 'blue' }
                 ];
 
-                globalList.innerHTML = teams.map(team => {
-                    const score = result.global[team.key] || 0;
-                    return `<div class="ranking-row"><span class="${team.color}">${team.name}</span><span>${score} pts</span></div>`;
+                // Sort teams by score (descending)
+                const sortedTeams = teams
+                    .map(team => ({ ...team, score: result.global[team.key] || 0 }))
+                    .sort((a, b) => b.score - a.score);
+
+                globalList.innerHTML = sortedTeams.map((team, idx) => {
+                    return `<div class="ranking-row"><span class="${team.color}">${idx + 1}. ${team.name}</span><span>${team.score} pts</span></div>`;
                 }).join('');
             }
 
-            // 3. TU PUNTUACIÓN PERSONAL (User's scores by team)
+            // 3. TU PUNTUACIÓN PERSONAL (User's scores by team, SORTED)
             const userList = document.getElementById('user-scores-list');
             if (userList && result.user) {
                 const teams = [
@@ -266,9 +270,14 @@ const App = {
                     { name: 'Avila', key: 'Avila', color: 'blue' }
                 ];
 
-                userList.innerHTML = teams.map(team => {
-                    const score = result.user[team.key] || 0;
-                    return `<div class="ranking-row"><span class="${team.color}">${team.name}</span><span>${score} pts</span></div>`;
+                // Sort teams by score (descending)
+                const sortedUserTeams = teams
+                    .map(team => ({ ...team, score: result.user[team.key] || 0 }))
+                    .sort((a, b) => b.score - a.score);
+
+                userList.innerHTML = sortedUserTeams.map(team => {
+                    // For user scores, we just show the score, no ranking number needed really, but sorted looks better
+                    return `<div class="ranking-row"><span class="${team.color}">${team.name}</span><span>${team.score} pts</span></div>`;
                 }).join('');
             }
 
