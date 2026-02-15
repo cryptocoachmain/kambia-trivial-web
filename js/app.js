@@ -421,7 +421,7 @@ const App = {
         const isCorrect = selectedKey.toLowerCase() === correctKey.toLowerCase();
 
         // Determine video to play
-        const videoFile = isCorrect ? 'assets/mw_si.mp4' : 'assets/mw_no.mp4';
+        const videoFile = isCorrect ? 'assets/correct.mp4' : 'assets/wrong.mp4';
 
         // Play video immediately
         VideoPlayer.play(videoFile, false, () => {
