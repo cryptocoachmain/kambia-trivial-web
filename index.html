@@ -146,6 +146,8 @@
                             <!-- Injected by JS -->
                         </tbody>
                     </table>
+                    <button id="view-full-ranking-btn" class="btn secondary"
+                        style="margin-top: 1rem; font-size: 0.9rem;">Ver Clasificación Completa</button>
                 </div>
 
                 <!-- Sponsored By -->
@@ -220,6 +222,36 @@
                     <span class="material-icons">warning</span>
                     <p id="cheat-msg">¡CUIDADO! NO SALGAS DE LA APP</p>
                 </div>
+            </div>
+        </section>
+
+        <!-- FULL RANKING SCREEN -->
+        <section id="full-ranking-screen" class="screen hidden">
+            <div class="scroll-content">
+                <div class="card-header" style="color: var(--kambia-green);">
+                    <span class="material-icons">leaderboard</span>
+                    <span>CLASIFICACIÓN COMPLETA</span>
+                </div>
+
+                <div class="card" id="full-ranking-card">
+                    <table class="ranking-table">
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th>Teléfono</th>
+                                <th class="red">Loy</th>
+                                <th class="yellow">Jav</th>
+                                <th class="blue">Avi</th>
+                                <th>Tot</th>
+                            </tr>
+                        </thead>
+                        <tbody id="full-ranking-body">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <button id="close-full-ranking-btn" class="btn primary">VOLVER AL MENÚ</button>
             </div>
         </section>
 

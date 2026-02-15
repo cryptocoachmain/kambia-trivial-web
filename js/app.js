@@ -106,6 +106,11 @@ const App = {
             });
         });
         this.elements.playGameBtn.addEventListener('click', () => this.startGame());
+
+        // Full Ranking
+        document.getElementById('view-full-ranking-btn').addEventListener('click', () => this.showFullRanking());
+        document.getElementById('close-full-ranking-btn').addEventListener('click', () => this.showScreen('home-screen'));
+
         this.elements.backHomeBtn.addEventListener('click', () => {
             this.resetGame();
             this.loadRankings(); // Refresh rankings after game
@@ -287,27 +292,88 @@ const App = {
                 }).join('');
             }
 
-            // 4. CLASIFICACIÓN POR JUGADOR (Player ranking table)
-            const playerBody = document.getElementById('player-ranking-body');
-            if (playerBody && result.ranking && Array.isArray(result.ranking)) {
-                playerBody.innerHTML = result.ranking.slice(0, 10).map((player, idx) => {
-                    const phone = player.phone.substring(player.phone.length - 4); // Last 4 digits
-                    return `
-                        <tr>
-                            <td>${idx + 1}</td>
-                            <td>***${phone}</td>
-                            <td class="red">${player.l || 0}</td>
-                            <td class="yellow">${player.j || 0}</td>
-                            <td class="blue">${player.a || 0}</td>
-                            <td><strong>${player.t || 0}</strong></td>
-                        </tr>
-                    `;
-                }).join('');
+            // 4. CLASIFICACIÓN POR JUGADOR (Logic: Top 10 + User)
+            if (result.ranking && Array.isArray(result.ranking)) {
+                this.state.fullRanking = result.ranking; // Store for full view
+                this.renderRankingTable('player-ranking-body', this.getDashboardRankingData(result.ranking, phone));
             }
 
         } catch (e) {
             console.error("Error loading rankings:", e);
         }
+    },
+
+    getDashboardRankingData(allRanking, userPhone) {
+        // Enforce phone normalization for comparison just in case
+        const normUserPhone = userPhone ? userPhone.slice(-9) : "";
+
+        let displayList = allRanking.slice(0, 10);
+
+        // Find user in the FULL list to get real rank
+        const userIndex = allRanking.findIndex(r => r.phone && r.phone.slice(-9) === normUserPhone);
+
+        // If user exists and is NOT in top 10, append them
+        if (userIndex >= 10) {
+            const userEntry = allRanking[userIndex];
+            // We attach the 'realRank' property to display the correct number
+            userEntry.realRank = userIndex + 1;
+            displayList.push(userEntry);
+        }
+
+        return displayList;
+    },
+
+    renderRankingTable(targetId, data) {
+        const tbody = document.getElementById(targetId);
+        if (!tbody) return;
+
+        const currentUserPhone = this.state.user.phone ? this.state.user.phone.slice(-9) : "";
+
+        tbody.innerHTML = data.map((player, idx) => {
+            // Determine rank display: use 'realRank' if set (for appended user), else idx + 1
+            const rank = player.realRank || (idx + 1); // Note: idx matches position for Top 10
+            // If we are rendering the FULL list (where realRank might not be set on everyone individually), 
+            // we rely on the index passed to map if we passed the full sorted array.
+            // But wait, renderRankingTable receives a 'data' array. 
+            // If it's the dashboard list, 'data' is the constructed list.
+            // If it's the full list, 'data' is the full array.
+
+            // Fix: calculate rank based on the player object's position in the original full list if possible?
+            // Actually, for the dashboard list, we manually added 'realRank' to the user. 
+            // For the top 10, their index in 'data' IS their rank (0->1, 1->2).
+            // So logic: if(player.realRank) return player.realRank; else return idx + 1;
+            // This works for Top 10 (idx 0-9) and User (idx 10, realRank X).
+            // For Full List, we won't have 'realRank' set, so idx+1 works perfectly.
+
+            const displayRank = player.realRank || (this.state.fullRanking.indexOf(player) + 1);
+
+            const pPhone = player.phone ? player.phone.slice(-9) : "000000000";
+            // Masking: 1st, 2nd, [***], 6th, 7th, 8th, 9th
+            // Index: 0, 1, [2,3,4], 5, 6, 7, 8
+            const maskedPhone = pPhone.length >= 9
+                ? pPhone.substring(0, 2) + "***" + pPhone.substring(5)
+                : pPhone;
+
+            const isCurrentUser = pPhone === currentUserPhone;
+            const rowClass = isCurrentUser ? "current-user-row" : "";
+
+            return `
+                <tr class="${rowClass}">
+                    <td>${displayRank}</td>
+                    <td>${maskedPhone}</td>
+                    <td class="red">${player.l || 0}</td>
+                    <td class="yellow">${player.j || 0}</td>
+                    <td class="blue">${player.a || 0}</td>
+                    <td><strong>${player.t || 0}</strong></td>
+                </tr>
+            `;
+        }).join('');
+    },
+
+    showFullRanking() {
+        if (!this.state.fullRanking) return;
+        this.renderRankingTable('full-ranking-body', this.state.fullRanking);
+        this.showScreen('full-ranking-screen');
     },
 
 

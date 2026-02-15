@@ -309,6 +309,19 @@ input[type="tel"] {
     border-bottom: 1px solid #eee;
 }
 
+.current-user-row {
+    background-color: #E0F2F1;
+    /* Kambia Light Green Tint */
+    font-weight: bold;
+    border: 2px solid var(--kambia-green);
+}
+
+.btn.secondary {
+    background-color: white;
+    border: 1px solid var(--kambia-green);
+    color: var(--kambia-green);
+}
+
 .footer-links {
     margin-top: 2rem;
     text-align: center;
