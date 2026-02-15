@@ -23,7 +23,7 @@ const VideoPlayer = {
     play(src, allowSkip = true, onComplete = null) {
         this.activeCallback = onComplete;
         this.videoElement.src = src;
-        
+
         if (allowSkip) {
             this.skipBtn.classList.remove('hidden');
         } else {
@@ -31,16 +31,40 @@ const VideoPlayer = {
         }
 
         this.overlay.classList.remove('hidden');
-        
+
         const playPromise = this.videoElement.play();
         if (playPromise !== undefined) {
-             playPromise.catch(error => {
-                 console.warn("Autoplay prevented:", error);
-                 // If autoplay fails (common in browsers), show a "Play" button or just skip
-                 // For now, we'll just stop to unblock the flow
-                 this.stopVideo();
-             });
+            playPromise.catch(error => {
+                console.warn("Autoplay prevented:", error);
+                // Show a manual Play button overlay instead of skipping
+                this.showManualPlayButton();
+            });
         }
+    },
+
+    showManualPlayButton() {
+        // Create or show a play button centered
+        let btn = document.getElementById('manual-play-overlay-btn');
+        if (!btn) {
+            btn = document.createElement('button');
+            btn.id = 'manual-play-overlay-btn';
+            btn.innerHTML = '<span class="material-icons" style="font-size: 64px; color: white;">play_circle_filled</span>';
+            btn.style.position = 'absolute';
+            btn.style.top = '50%';
+            btn.style.left = '50%';
+            btn.style.transform = 'translate(-50%, -50%)';
+            btn.style.background = 'transparent';
+            btn.style.border = 'none';
+            btn.style.cursor = 'pointer';
+            btn.style.zIndex = '10001'; // Above video
+
+            btn.onclick = () => {
+                this.videoElement.play();
+                btn.style.display = 'none';
+            };
+            this.overlay.appendChild(btn);
+        }
+        btn.style.display = 'block';
     },
 
     stopVideo() {
