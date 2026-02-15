@@ -31,9 +31,16 @@ const API = {
 
         } catch (error) {
             console.error('API Error:', error);
-            // Show error in UI if possible
+            // DEBUG: Show error in UI
             const errorDiv = document.getElementById('admin-message-text');
-            if (errorDiv) errorDiv.textContent = "Error de conexión: " + error.message;
+            if (errorDiv) {
+                errorDiv.innerHTML = `
+                    <span style="color:red; font-size: 0.8rem">
+                    <b>Error de Conexión:</b><br>
+                    ${error.message}<br>
+                    Intenta recargar. Revisa que el Script esté publicado como "Anyone".
+                    </span>`;
+            }
             return { error: true, message: error.message };
         }
     },
