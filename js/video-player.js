@@ -21,7 +21,6 @@ const VideoPlayer = {
      * @param {Function} onComplete - Callback when video ends or is skipped.
      */
     play(src, allowSkip = true, onComplete = null) {
-        console.log("VideoPlayer: Requesting play for", src);
         this.activeCallback = onComplete;
         this.videoElement.src = src;
 
@@ -31,18 +30,14 @@ const VideoPlayer = {
             this.skipBtn.classList.add('hidden');
         }
 
-        // FORCE VISIBILITY
+        // FORCE VISIBILITY (Safety measure)
         this.overlay.classList.remove('hidden');
         this.overlay.style.display = 'flex';
         this.overlay.style.zIndex = '99999';
 
-        console.log("VideoPlayer: Overlay style display is now:", this.overlay.style.display);
-
         const playPromise = this.videoElement.play();
         if (playPromise !== undefined) {
-            playPromise.then(() => {
-                console.log("VideoPlayer: Play started successfully");
-            }).catch(error => {
+            playPromise.catch(error => {
                 console.warn("Autoplay prevented:", error);
                 // Show a manual Play button overlay instead of skipping
                 this.showManualPlayButton();
