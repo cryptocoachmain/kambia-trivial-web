@@ -11,6 +11,7 @@ const API = {
 
         const params = new URLSearchParams();
         params.append('action', action);
+        params.append('origin', 'Web'); // Identifier for logging
 
         for (const key in data) {
             params.append(key, data[key]);
