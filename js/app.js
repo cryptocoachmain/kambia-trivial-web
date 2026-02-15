@@ -253,7 +253,17 @@ const App = {
 
                 // Sort teams by score (descending)
                 const sortedTeams = teams
-                    .map(team => ({ ...team, score: result.global[team.key] || 0 }))
+                    .map(team => {
+                        // FIX: Sum "Avila" and "Ávila" for web display without breaking Android API
+                        let score = result.global[team.key] || 0;
+                        if (team.key === "Avila") {
+                            score += (result.global["Ávila"] || 0); // Add accented version if exists
+                            // Also check lower case just in case
+                            score += (result.global["avila"] || 0);
+                            score += (result.global["ávila"] || 0);
+                        }
+                        return { ...team, score: score };
+                    })
                     .sort((a, b) => b.score - a.score);
 
                 globalList.innerHTML = sortedTeams.map((team, idx) => {
