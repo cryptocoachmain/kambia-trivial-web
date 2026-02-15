@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kambia Trivial Leioa</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="assets/Logo-kambia_WEB.png">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+
+    <!-- VIDEO OVERLAY CONTAINER -->
+    <div id="video-overlay" class="video-overlay hidden">
+        <video id="game-video" playsinline webkit-playsinline></video>
+        <button id="skip-video-btn" class="hidden">Saltar</button>
+    </div>
+
+    <!-- APP CONTAINER -->
+    <div id="app-container">
+        
+        <!-- LOGIN SCREEN -->
+        <section id="login-screen" class="screen active">
+            <div class="scroll-content">
+                <img src="assets/Logo-kambia_WEB.png" alt="Kambia Logo" class="logo">
+                <h1>Bienvenido al Trivial de Kambia</h1>
+                
+                <div class="input-group">
+                    <label for="phone-input">Número de teléfono</label>
+                    <input type="tel" id="phone-input" placeholder="Introduce tu número" maxlength="9">
+                    <span class="helper-text">Introduce los 9 dígitos sin espacios</span>
+                </div>
+
+                <h2>Selecciona tu equipo:</h2>
+                <div class="team-selector" id="team-selector">
+                    <!-- Teams will be injected here by JS -->
+                </div>
+                <p id="team-error" class="error-text hidden">Por favor, selecciona un equipo</p>
+
+                <button id="login-btn" class="btn primary" disabled>CONTINUAR</button>
+            </div>
+        </section>
+
+        <!-- WELCOME SCREEN (Post Login) -->
+        <section id="welcome-screen" class="screen hidden">
+             <div class="scroll-content">
+                <img src="assets/Logo-kambia_WEB.png" alt="Kambia Logo" class="logo">
+                
+                <div class="card">
+                    <p class="highlight-text">Esta aplicación se ha desarrollado para la Fundación Kambia.</p>
+                    <div class="bizum-box">
+                        <p>Si desea hacer su donativo, nuestro código de Bizum es el</p>
+                        <p class="bizum-code">02147</p>
+                    </div>
+                    <p class="small-text">(donar, fundaciones, organizaciones sin ánimo de lucro...)</p>
+                </div>
+
+                <div class="card transparent">
+                    <p class="label">PATROCINADO POR</p>
+                    <p>Aquí puede ir su publicidad</p>
+                </div>
+
+                <button id="start-app-btn" class="btn primary">JUGAR</button>
+            </div>
+        </section>
+
+        <!-- HOME SCREEN -->
+        <section id="home-screen" class="screen hidden">
+            <div class="scroll-content">
+                <img src="assets/Logo-kambia_WEB.png" alt="Kambia Logo" class="logo-small">
+
+                <!-- Admin Messages -->
+                <div class="card primary-card" id="admin-messages-card">
+                    <div class="card-header">
+                        <span class="material-icons">info</span>
+                        <span>MENSAJES DEL ADMINISTRADOR</span>
+                    </div>
+                    <div class="message-content">
+                        <button id="prev-msg-btn" class="icon-btn"><span class="material-icons">arrow_back</span></button>
+                        <div class="message-text-container">
+                             <p id="admin-message-text">Cargando mensajes...</p>
+                             <span id="message-counter">0 / 0</span>
+                        </div>
+                        <button id="next-msg-btn" class="icon-btn"><span class="material-icons">arrow_forward</span></button>
+                    </div>
+                </div>
+
+                <!-- Presencial Scores -->
+                <div class="card">
+                    <h3>SPORTS LEIOA PRESENCIALES</h3>
+                    <div id="presencial-ranking-list">
+                        <!-- Injected by JS -->
+                        <div class="ranking-row"><span class="red">1. Loyola</span><span>0 pts</span></div>
+                        <div class="ranking-row"><span class="yellow">2. Javier</span><span>0 pts</span></div>
+                        <div class="ranking-row"><span class="blue">3. Avila</span><span>0 pts</span></div>
+                    </div>
+                </div>
+
+                <h3>SPORTS LEIOA ONLINE</h3>
+                
+                <!-- Current Team Badge -->
+                <div class="card team-badge-card" id="my-team-card">
+                    <!-- Injected by JS -->
+                </div>
+
+                <!-- Online Scoreboard -->
+                <div class="card">
+                    <img src="assets/maryward_header.png" alt="Mary Ward" class="card-image" id="mary-ward-img">
+                    <h3>CLASIFICACIÓN TOTAL</h3>
+                    <div id="global-ranking-list">
+                        <!-- Injected by JS -->
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <h3>TU PUNTUACIÓN PERSONAL</h3>
+                    <div id="user-scores-list">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Player Ranking -->
+                <div class="card" id="player-ranking-card">
+                     <h3>CLASIFICACIÓN POR JUGADOR</h3>
+                     <table class="ranking-table">
+                         <thead>
+                             <tr>
+                                 <th>Pos</th>
+                                 <th>Teléfono</th>
+                                 <th class="red">Loy</th>
+                                 <th class="yellow">Jav</th>
+                                 <th class="blue">Avi</th>
+                                 <th>Tot</th>
+                             </tr>
+                         </thead>
+                         <tbody id="player-ranking-body">
+                             <!-- Injected by JS -->
+                         </tbody>
+                     </table>
+                </div>
+
+                <button id="play-game-btn" class="btn primary">JUGAR AL TRIVIAL</button>
+
+                <div class="card transparent">
+                     <h4>Cómo funciona:</h4>
+                     <ul>
+                         <li>10 preguntas sobre la historia de Mary Ward</li>
+                         <li>10 puntos por respuesta correcta</li>
+                         <li>50 puntos extra por pleno (10/10)</li>
+                         <li>Las respuestas se mezclan en cada ronda</li>
+                         <li class="primary-color">Se detectan respuestas sospechosas</li>
+                     </ul>
+                </div>
+
+                <button id="report-issue-btn" class="btn danger">Enviar Incidencia al Administrador</button>
+                
+                <!-- Footer Links -->
+                <div class="footer-links">
+                    <h4>Enlaces Fundación Kambia</h4>
+                    <div class="link-icons">
+                        <a href="tel:+34916252181" class="circle-icon"><span class="material-icons">phone</span></a>
+                        <a href="mailto:hola@fundacionkambia.org" class="circle-icon"><span class="material-icons">email</span></a>
+                        <a href="https://www.instagram.com/fundacionkambia/" target="_blank" class="circle-icon"><span class="material-icons">camera_alt</span></a>
+                        <a href="https://www.youtube.com/channel/UCzSCv7f8QSQBF_r5dNwicjg" target="_blank" class="circle-icon"><span class="material-icons">play_arrow</span></a>
+                        <a href="https://www.linkedin.com/company/fundacionkambia" target="_blank" class="circle-icon"><span class="material-icons">business</span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME SCREEN -->
+        <section id="game-screen" class="screen hidden">
+            <div class="game-header">
+                <div class="timer-bar">
+                    <div id="timer-progress" class="progress"></div>
+                </div>
+                <div class="stats-row">
+                    <span>Pregunta <span id="current-question-num">1</span>/10</span>
+                    <span>Puntos: <span id="current-score">0</span></span>
+                </div>
+            </div>
+
+            <div class="scroll-content game-content">
+                <div class="question-card">
+                    <p id="question-text">Cargando pregunta...</p>
+                </div>
+
+                <div id="options-container" class="options-grid">
+                    <button class="option-btn" data-opt="a"></button>
+                    <button class="option-btn" data-opt="b"></button>
+                    <button class="option-btn" data-opt="c"></button>
+                    <button class="option-btn" data-opt="d"></button>
+                </div>
+                
+                <div id="feedback-msg" class="feedback-msg hidden"></div>
+            </div>
+            
+             <!-- Anti Cheat Warning -->
+             <div id="cheat-warning" class="modal hidden">
+                 <div class="modal-content warning">
+                     <span class="material-icons">warning</span>
+                     <p id="cheat-msg">¡CUIDADO! NO SALGAS DE LA APP</p>
+                 </div>
+             </div>
+        </section>
+
+        <!-- THANKS SCREEN -->
+        <section id="thanks-screen" class="screen hidden">
+            <div class="scroll-content centered">
+                <img src="assets/Logo-kambia_WEB.png" alt="Kambia Logo" class="logo">
+                <h2>¡Partida Terminada!</h2>
+                
+                <div class="card result-card">
+                    <h3>Puntuación Final</h3>
+                    <p class="big-score" id="final-score">0</p>
+                    <p>Aciertos: <span id="final-correct">0</span>/10</p>
+                    <p id="perfect-bonus-msg" class="hidden positive">+50 Bono Pleno</p>
+                </div>
+
+                <div class="card">
+                     <p>Si te ha gustado, recuerda nuestro Bizum:</p>
+                     <p class="bizum-code">02147</p>
+                </div>
+                
+                <button id="back-home-btn" class="btn primary">VOLVER AL MENU</button>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/questions.js"></script>
+    <script src="js/video-player.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

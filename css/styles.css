@@ -1,0 +1,465 @@
+/* Kambia Corporate Colors */
+:root {
+    --kambia-green: #009688;
+    --kambia-light-green: #16B3AA;
+    --kambia-vibrant: #00DBB0;
+    --kambia-dark-gray: #424242;
+    --kambia-white: #FFFFFF;
+    --text-primary: #333333;
+    --text-secondary: #666666;
+    --bg-color: #F5F5F5;
+    --error-color: #B00020;
+    --correct-color: #4CAF50;
+    
+    /* Team Colors */
+    --team-red: #E53935;
+    --team-yellow: #FFB300;
+    --team-blue: #1E88E5;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.5;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Glegoo', serif;
+    color: var(--kambia-dark-gray);
+    margin-bottom: 0.5rem;
+}
+
+#app-container {
+    width: 100%;
+    max-width: 480px; /* Mobile app simulation */
+    height: 100%;
+    background-color: var(--kambia-white);
+    position: relative;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Utilities --- */
+.hidden { display: none !important; }
+
+.scroll-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.centered {
+    justify-content: center;
+}
+
+/* --- Common Components --- */
+.logo {
+    width: 180px;
+    margin-bottom: 2rem;
+}
+
+.logo-small {
+    width: 120px;
+    margin-bottom: 1rem;
+}
+
+.btn {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 1rem;
+}
+
+.btn.primary {
+    background-color: var(--kambia-green);
+    color: white;
+}
+
+.btn.primary:disabled {
+    background-color: #BDBDBD;
+    cursor: not-allowed;
+}
+
+.btn.danger {
+    background-color: transparent;
+    border: 2px solid var(--error-color);
+    color: var(--error-color);
+    margin-top: 2rem;
+    font-size: 0.9rem;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.card.primary-card {
+    background-color: var(--kambia-green);
+    color: white;
+}
+
+.card.primary-card h3, .card.primary-card span {
+    color: white;
+}
+
+.card.transparent {
+    background: transparent;
+    box-shadow: none;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+/* --- Login Screen --- */
+.input-group {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    color: var(--kambia-green);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+input[type="tel"] {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid var(--kambia-green);
+    border-radius: 4px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.helper-text {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 0.2rem;
+    display: block;
+}
+
+.team-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.team-item {
+    border: 2px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 0.5rem;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.team-item.selected {
+    border-color: var(--kambia-green);
+    background-color: rgba(0, 150, 136, 0.1);
+}
+
+.team-color-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin: 0 auto 0.5rem;
+}
+
+.error-text {
+    color: var(--error-color);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* --- Welcome Screen --- */
+.highlight-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--kambia-green);
+}
+
+.bizum-box {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #E0F2F1;
+    border-radius: 8px;
+}
+
+.bizum-code {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--kambia-dark-gray);
+    letter-spacing: 2px;
+}
+
+/* --- Home Screen --- */
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.message-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.ranking-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.ranking-row:last-child { border-bottom: none; }
+
+.red { color: var(--team-red); font-weight: bold; }
+.yellow { color: var(--team-yellow); font-weight: bold; }
+.blue { color: var(--team-blue); font-weight: bold; }
+
+.card-image {
+    width: 100%;
+    max-height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.ranking-table th {
+    background-color: #f5f5f5;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.ranking-table td {
+    padding: 0.5rem;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.footer-links {
+    margin-top: 2rem;
+    text-align: center;
+    width: 100%;
+}
+
+.link-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.circle-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--kambia-green);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+/* --- Game Screen --- */
+.game-header {
+    padding: 1rem;
+    background-color: var(--kambia-green);
+    color: white;
+}
+
+.timer-bar {
+    width: 100%;
+    height: 6px;
+    background-color: rgba(255,255,255,0.3);
+    border-radius: 3px;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background-color: var(--team-yellow); /* Contrast color for timer */
+    width: 100%;
+    transition: width 1s linear;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+}
+
+.game-content {
+    justify-content: flex-start;
+}
+
+.question-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 100%;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    width: 100%;
+}
+
+.option-btn {
+    padding: 1rem;
+    background: white;
+    border: 2px solid #E0E0E0;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.option-btn:hover {
+    border-color: var(--kambia-green);
+    background-color: #F0F9F8;
+}
+
+.option-btn.selected {
+    border-color: var(--kambia-green);
+    background-color: var(--kambia-green);
+    color: white;
+}
+
+.option-btn.correct {
+    border-color: var(--correct-color);
+    background-color: var(--correct-color) !important;
+    color: white;
+}
+
+.option-btn.wrong {
+    border-color: var(--error-color);
+    background-color: var(--error-color) !important;
+    color: white;
+}
+
+.feedback-msg {
+    margin-top: 1rem;
+    font-weight: bold;
+    padding: 0.5rem;
+    border-radius: 4px;
+    width: 100%;
+    text-align: center;
+}
+
+/* --- Video Overlay --- */
+.video-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+video {
+    width: 100%;
+    max-width: 600px;
+    max-height: 100%;
+}
+
+#skip-video-btn {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/* --- Modals/Warnings --- */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content.warning {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    color: var(--error-color);
+}
+
+.modal-content.warning .material-icons {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
