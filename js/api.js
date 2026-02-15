@@ -6,30 +6,23 @@ const API = {
     BASE_URL: 'https://script.google.com/macros/s/AKfycbyvsBUGUrTNX7vJMVo4-QOdi7ahROI02y13_TGYKlb6JwTHXw_bivO8mqRmMxJfM4aEAg/exec',
 
     async _request(action, data = {}) {
-        const payload = {
-            action: action,
-            ...data
-        };
+        // Use GET for data fetching to avoid CORS preflight issues with simple requests
+        // Google Apps Script Web Apps handle GET much easier for public access
+
+        const params = new URLSearchParams();
+        params.append('action', action);
+
+        for (const key in data) {
+            params.append(key, data[key]);
+        }
+
+        const url = `${this.BASE_URL}?${params.toString()}`;
 
         try {
-            const response = await fetch(this.BASE_URL, {
-                method: 'POST',
-                mode: 'no-cors', // Google Apps Script quirk for simple POSTs
-                // However, 'no-cors' returns an opaque response which we can't read.
-                // We actually need 'cors' if the script headers are set correctly.
-                // If not set correctly, we might have issues.
-                // Let's assume standard fetch for now, but handle potential CORS issues.
-                // NOTE: Scripts must createTextOutput(JSON.stringify(out)).setMimeType(ContentService.MimeType.JSON)
-                // and we rely on redirects.
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8',
-                },
-                body: JSON.stringify(payload)
+            const response = await fetch(url, {
+                method: 'GET',
+                // 'cors' mode is default and correct for GET if script sets headers
             });
-
-            // If we use 'no-cors', we can't read the response.
-            // If the script is set up correctly for CORS (public web app), we should use default mode.
-            // But usually checking response.json() works.
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -38,7 +31,9 @@ const API = {
 
         } catch (error) {
             console.error('API Error:', error);
-            // Fallback for demo/testing if API fails
+            // Show error in UI if possible
+            const errorDiv = document.getElementById('admin-message-text');
+            if (errorDiv) errorDiv.textContent = "Error de conexión: " + error.message;
             return { error: true, message: error.message };
         }
     },
