@@ -209,14 +209,16 @@ const App = {
 
     async loadRankings() {
         try {
-            const result = await API.getRanking();
+            // Pass user phone to get personalized scores
+            const phone = this.state.user.phone || "";
+            const result = await API.getRanking(phone);
 
             if (!result || result.error || result.result !== "success") {
                 console.error("Failed to load rankings", result);
                 return;
             }
 
-            // 1. SPORTS LEIOA PRESENCIALES (Global scores by team)
+            // 1. SPORTS LEIOA PRESENCIALES (Global scores by team, SORTED)
             const presencialList = document.getElementById('presencial-ranking-list');
             if (presencialList && result.global) {
                 const teams = [
@@ -225,9 +227,13 @@ const App = {
                     { name: 'Avila', key: 'Avila', color: 'blue' }
                 ];
 
-                presencialList.innerHTML = teams.map((team, idx) => {
-                    const score = result.global[team.key] || 0;
-                    return `<div class="ranking-row"><span class="${team.color}">${idx + 1}. ${team.name}</span><span>${score} pts</span></div>`;
+                // Sort teams by score (descending)
+                const sortedTeams = teams
+                    .map(team => ({ ...team, score: result.global[team.key] || 0 }))
+                    .sort((a, b) => b.score - a.score);
+
+                presencialList.innerHTML = sortedTeams.map((team, idx) => {
+                    return `<div class="ranking-row"><span class="${team.color}">${idx + 1}. ${team.name}</span><span>${team.score} pts</span></div>`;
                 }).join('');
             }
 
