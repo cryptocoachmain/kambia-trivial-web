@@ -102,6 +102,7 @@ const App = {
         this.elements.playGameBtn.addEventListener('click', () => this.startGame());
         this.elements.backHomeBtn.addEventListener('click', () => {
             this.resetGame();
+            this.loadRankings(); // Refresh rankings after game
             this.showScreen('home-screen');
         });
 
@@ -205,10 +206,84 @@ const App = {
         this.elements.msgCounter.textContent = `${this.state.currentMsgIndex + 1} / ${count}`;
     },
 
+
     async loadRankings() {
-        // Placeholder for ranking logic
-        // Populates #presencial-ranking-listIn, #global-ranking-list, #user-scores-list
+        try {
+            const result = await API.getRanking();
+
+            if (!result || result.error || result.result !== "success") {
+                console.error("Failed to load rankings", result);
+                return;
+            }
+
+            // 1. SPORTS LEIOA PRESENCIALES (Global scores by team)
+            const presencialList = document.getElementById('presencial-ranking-list');
+            if (presencialList && result.global) {
+                const teams = [
+                    { name: 'Loyola', key: 'Loyola', color: 'red' },
+                    { name: 'Javier', key: 'Javier', color: 'yellow' },
+                    { name: 'Avila', key: 'Avila', color: 'blue' }
+                ];
+
+                presencialList.innerHTML = teams.map((team, idx) => {
+                    const score = result.global[team.key] || 0;
+                    return `<div class="ranking-row"><span class="${team.color}">${idx + 1}. ${team.name}</span><span>${score} pts</span></div>`;
+                }).join('');
+            }
+
+            // 2. CLASIFICACIÓN TOTAL (Global online ranking)
+            const globalList = document.getElementById('global-ranking-list');
+            if (globalList && result.global) {
+                const teams = [
+                    { name: 'Loyola', key: 'Loyola', color: 'red' },
+                    { name: 'Javier', key: 'Javier', color: 'yellow' },
+                    { name: 'Avila', key: 'Avila', color: 'blue' }
+                ];
+
+                globalList.innerHTML = teams.map(team => {
+                    const score = result.global[team.key] || 0;
+                    return `<div class="ranking-row"><span class="${team.color}">${team.name}</span><span>${score} pts</span></div>`;
+                }).join('');
+            }
+
+            // 3. TU PUNTUACIÓN PERSONAL (User's scores by team)
+            const userList = document.getElementById('user-scores-list');
+            if (userList && result.user) {
+                const teams = [
+                    { name: 'Loyola', key: 'Loyola', color: 'red' },
+                    { name: 'Javier', key: 'Javier', color: 'yellow' },
+                    { name: 'Avila', key: 'Avila', color: 'blue' }
+                ];
+
+                userList.innerHTML = teams.map(team => {
+                    const score = result.user[team.key] || 0;
+                    return `<div class="ranking-row"><span class="${team.color}">${team.name}</span><span>${score} pts</span></div>`;
+                }).join('');
+            }
+
+            // 4. CLASIFICACIÓN POR JUGADOR (Player ranking table)
+            const playerBody = document.getElementById('player-ranking-body');
+            if (playerBody && result.ranking && Array.isArray(result.ranking)) {
+                playerBody.innerHTML = result.ranking.slice(0, 10).map((player, idx) => {
+                    const phone = player.phone.substring(player.phone.length - 4); // Last 4 digits
+                    return `
+                        <tr>
+                            <td>${idx + 1}</td>
+                            <td>***${phone}</td>
+                            <td class="red">${player.l || 0}</td>
+                            <td class="yellow">${player.j || 0}</td>
+                            <td class="blue">${player.a || 0}</td>
+                            <td><strong>${player.t || 0}</strong></td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+        } catch (e) {
+            console.error("Error loading rankings:", e);
+        }
     },
+
 
     // --- GAME LOGIC ---
 
