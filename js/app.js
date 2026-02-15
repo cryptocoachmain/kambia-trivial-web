@@ -98,7 +98,13 @@ const App = {
         this.elements.loginBtn.addEventListener('click', () => this.handleLogin());
 
         // Navigation
-        this.elements.startAppBtn.addEventListener('click', () => this.showScreen('home-screen'));
+        this.elements.startAppBtn.addEventListener('click', () => {
+            // Play intro video before entering dashboard
+            VideoPlayer.play('assets/mw.mp4', false, () => {
+                this.showScreen('home-screen');
+                this.loadRankings(); // Load data when entering dashboard
+            });
+        });
         this.elements.playGameBtn.addEventListener('click', () => this.startGame());
         this.elements.backHomeBtn.addEventListener('click', () => {
             this.resetGame();
@@ -414,6 +420,17 @@ const App = {
 
         const isCorrect = selectedKey.toLowerCase() === correctKey.toLowerCase();
 
+        // Determine video to play
+        const videoFile = isCorrect ? 'assets/mw_si.mp4' : 'assets/mw_no.mp4';
+
+        // Play video immediately
+        VideoPlayer.play(videoFile, false, () => {
+            // After video ends, show UI feedback and proceed
+            this.processAnswerResult(selectedKey, correctKey, isCorrect);
+        });
+    },
+
+    processAnswerResult(selectedKey, correctKey, isCorrect) {
         // Highlight options
         const buttons = this.elements.optionsContainer.querySelectorAll('.option-btn');
         buttons.forEach(btn => {
@@ -425,12 +442,12 @@ const App = {
             this.state.game.score += this.CONSTANTS.POINTS_PER_QUESTION;
             this.state.game.correctCount++;
             this.showFeedback(true, "¡Correcto!");
-            // Play Correct Video?
-            // VideoPlayer.play('assets/correct.mp4', false, () => { ... });
         } else {
             this.showFeedback(false, "Incorrecto");
-            // Play Wrong Video?
         }
+
+        // Update score display immediately
+        this.elements.currentScore.textContent = this.state.game.score;
 
         setTimeout(() => {
             this.state.game.currentIndex++;
@@ -447,11 +464,18 @@ const App = {
     },
 
     handleCheatAttempt() {
+        // STOP EVERYTHING
+        VideoPlayer.stopVideo();
+        clearInterval(this.state.game.timer);
+
         this.elements.cheatWarning.classList.remove('hidden');
-        // Logic to strike or deduct points?
-        // Close after 3s
+        this.elements.cheatMsg.textContent = "Actividad sospechosa detectada. Partida cancelada.";
+
+        // Expel user after brief warning
         setTimeout(() => {
             this.elements.cheatWarning.classList.add('hidden');
+            this.resetGame();
+            window.location.reload(); // Force reload to clear state cleanly
         }, 3000);
     },
 
