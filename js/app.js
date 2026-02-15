@@ -211,16 +211,21 @@ const App = {
         try {
             // Pass user phone to get personalized scores
             const phone = this.state.user.phone || "";
+
+            // Fetch PRESENCIAL scores (from "Presencial" sheet)
+            const presencialResult = await API.getPresencialScores();
+
+            // Fetch ONLINE scores (from "Puntuaciones" sheet)
             const result = await API.getRanking(phone);
 
             if (!result || result.error || result.result !== "success") {
-                console.error("Failed to load rankings", result);
+                console.error("Failed to load online rankings", result);
                 return;
             }
 
-            // 1. SPORTS LEIOA PRESENCIALES (Global scores by team, SORTED)
+            // 1. SPORTS LEIOA PRESENCIALES (from Presencial sheet, SORTED)
             const presencialList = document.getElementById('presencial-ranking-list');
-            if (presencialList && result.global) {
+            if (presencialList && presencialResult && presencialResult.result === "success" && presencialResult.scores) {
                 const teams = [
                     { name: 'Loyola', key: 'Loyola', color: 'red' },
                     { name: 'Javier', key: 'Javier', color: 'yellow' },
@@ -229,7 +234,7 @@ const App = {
 
                 // Sort teams by score (descending)
                 const sortedTeams = teams
-                    .map(team => ({ ...team, score: result.global[team.key] || 0 }))
+                    .map(team => ({ ...team, score: presencialResult.scores[team.key] || 0 }))
                     .sort((a, b) => b.score - a.score);
 
                 presencialList.innerHTML = sortedTeams.map((team, idx) => {

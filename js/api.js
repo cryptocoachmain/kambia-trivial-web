@@ -79,5 +79,9 @@ const API = {
 
     async getMessages() {
         return this._request('get_messages');
+    },
+
+    async getPresencialScores() {
+        return this._request('get_presencial_scores');
     }
 };
