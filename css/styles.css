@@ -549,3 +549,15 @@ video {
     width: 100%;
     transition: width 0.1s linear;
 }
+
+/* --- New Utilities --- */
+.question-text-green {
+    color: var(--kambia-green) !important;
+}
+
+.warning-text-red {
+    color: #D32F2F;
+    /* Red */
+    font-weight: bold;
+    text-transform: uppercase;
+}

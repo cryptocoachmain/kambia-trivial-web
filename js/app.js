@@ -84,6 +84,9 @@ const App = {
 
         // Show initial video? (If user wants it on page load)
         // VideoPlayer.play('assets/mw.mp4', true, () => console.log('Intro done'));
+
+        this.simulatePhoneDetection();
+        this.loadRankings(); // Load rankings on init
     },
 
     setupEventListeners() {
@@ -629,6 +632,38 @@ const App = {
 
     resetGame() {
         // Reset necessary UI bits if needed
+    },
+
+    maskPhone(phone) {
+        if (!phone || phone.length < 6) return phone;
+        // Format: 12***6789
+        return phone.substring(0, 2) + "***" + phone.substring(phone.length - 4);
+    },
+
+    simulatePhoneDetection() {
+        // Check if phone was stored previously
+        const storedPhone = localStorage.getItem('kambia_phone');
+
+        // Disable initially
+        this.elements.phoneInput.disabled = true;
+        this.elements.loginBtn.disabled = true;
+        this.elements.phoneInput.value = "";
+        this.elements.phoneInput.placeholder = "Buscando su número...";
+
+        // Simulate waiting for 4 seconds
+        setTimeout(() => {
+            if (storedPhone) {
+                this.elements.phoneInput.value = storedPhone;
+                this.elements.phoneInput.placeholder = "Teléfono móvil";
+                this.elements.phoneInput.disabled = false;
+                this.elements.loginBtn.disabled = false;
+                this.validateLogin();
+            } else {
+                this.elements.phoneInput.placeholder = "Introduzca su número manualmente";
+                this.elements.phoneInput.disabled = false;
+                this.elements.phoneInput.focus();
+            }
+        }, 4000);
     }
 };
 
