@@ -25,7 +25,7 @@ const App = {
         prevMsgBtn: document.getElementById('prev-msg-btn'),
         nextMsgBtn: document.getElementById('next-msg-btn'),
 
-        timerDisplay: document.getElementById('timer-display'),
+        timerProgress: document.getElementById('timer-progress'),
         currentQuestionNum: document.getElementById('current-question-num'),
         questionText: document.getElementById('question-text'),
         optionsContainer: document.getElementById('options-container'),

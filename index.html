@@ -197,10 +197,14 @@
 
         <!-- GAME SCREEN -->
         <section id="game-screen" class="screen hidden">
-            <div class="header-bar">
-                <div class="timer-display" id="timer-display">15</div>
-                <div class="question-counter" style="font-weight: bold; color: var(--kambia-green);">
-                    Pregunta <span id="current-question-num">1</span>/10
+            <div class="game-header">
+                <div class="question-info">
+                    <span style="font-weight: bold; color: var(--kambia-green); font-size: 1.1rem;">
+                        Pregunta <span id="current-question-num">1</span>/10
+                    </span>
+                </div>
+                <div class="timer-bar">
+                    <div id="timer-progress" class="timer-progress"></div>
                 </div>
             </div>
 
