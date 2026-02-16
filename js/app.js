@@ -494,27 +494,25 @@ const App = {
         this.state.game.timeLeft = 100;
         this.state.game.canAnswer = true;
 
-        clearInterval(this.state.game.timer);
-        const totalSeconds = this.CONSTANTS.QUESTION_TIME_MS / 1000; // 15 seconds
-        let secondsLeft = totalSeconds;
-
-        // Update display immediately
-        if (this.elements.timerDisplay) {
-            this.elements.timerDisplay.textContent = secondsLeft;
+        // Set initial width
+        if (this.elements.timerProgress) {
+            this.elements.timerProgress.style.width = '100%';
         }
 
-        this.state.game.timer = setInterval(() => {
-            secondsLeft--;
-            this.state.game.timeLeft = (secondsLeft / totalSeconds) * 100;
+        clearInterval(this.state.game.timer);
+        const step = 100 / (this.CONSTANTS.QUESTION_TIME_MS / 100); // Update every 100ms
 
-            if (this.elements.timerDisplay) {
-                this.elements.timerDisplay.textContent = Math.max(0, secondsLeft);
+        this.state.game.timer = setInterval(() => {
+            this.state.game.timeLeft -= step;
+
+            if (this.elements.timerProgress) {
+                this.elements.timerProgress.style.width = Math.max(0, this.state.game.timeLeft) + '%';
             }
 
-            if (secondsLeft <= 0) {
+            if (this.state.game.timeLeft <= 0) {
                 this.handleTimeout();
             }
-        }, 1000); // Update every second
+        }, 100);
     },
 
     handleTimeout() {
