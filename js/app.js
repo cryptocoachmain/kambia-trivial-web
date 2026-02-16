@@ -27,7 +27,6 @@ const App = {
 
         timerProgress: document.getElementById('timer-progress'),
         currentQuestionNum: document.getElementById('current-question-num'),
-        currentScore: document.getElementById('current-score'),
         questionText: document.getElementById('question-text'),
         optionsContainer: document.getElementById('options-container'),
         feedbackMsg: document.getElementById('feedback-msg'),
@@ -466,7 +465,6 @@ const App = {
 
         // Update UI
         this.elements.currentQuestionNum.textContent = this.state.game.currentIndex + 1;
-        this.elements.currentScore.textContent = this.state.game.score;
         this.elements.questionText.textContent = q.question;
 
         // Shuffle options logic would go here if not pre-shuffled
