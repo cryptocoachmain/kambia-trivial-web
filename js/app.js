@@ -25,7 +25,7 @@ const App = {
         prevMsgBtn: document.getElementById('prev-msg-btn'),
         nextMsgBtn: document.getElementById('next-msg-btn'),
 
-        timerProgress: document.getElementById('timer-progress'),
+        timerDisplay: document.getElementById('timer-display'),
         currentQuestionNum: document.getElementById('current-question-num'),
         questionText: document.getElementById('question-text'),
         optionsContainer: document.getElementById('options-container'),
@@ -492,20 +492,29 @@ const App = {
 
     startTimer() {
         this.state.game.timeLeft = 100;
-        this.elements.timerProgress.style.width = '100%';
         this.state.game.canAnswer = true;
 
         clearInterval(this.state.game.timer);
-        const step = 100 / (this.CONSTANTS.QUESTION_TIME_MS / 100);
+        const totalSeconds = this.CONSTANTS.QUESTION_TIME_MS / 1000; // 15 seconds
+        let secondsLeft = totalSeconds;
+
+        // Update display immediately
+        if (this.elements.timerDisplay) {
+            this.elements.timerDisplay.textContent = secondsLeft;
+        }
 
         this.state.game.timer = setInterval(() => {
-            this.state.game.timeLeft -= step;
-            this.elements.timerProgress.style.width = this.state.game.timeLeft + '%';
+            secondsLeft--;
+            this.state.game.timeLeft = (secondsLeft / totalSeconds) * 100;
 
-            if (this.state.game.timeLeft <= 0) {
+            if (this.elements.timerDisplay) {
+                this.elements.timerDisplay.textContent = Math.max(0, secondsLeft);
+            }
+
+            if (secondsLeft <= 0) {
                 this.handleTimeout();
             }
-        }, 100);
+        }, 1000); // Update every second
     },
 
     handleTimeout() {
