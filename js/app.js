@@ -304,6 +304,47 @@ const App = {
                 }).join('');
             }
 
+            // --- PLENUMS RANKING ( Top 10 ) ---
+            const plenumsBody = document.getElementById('plenums-ranking-body');
+            if (plenumsBody && result.rankingPlenums && Array.isArray(result.rankingPlenums)) {
+                plenumsBody.innerHTML = '';
+                const topPlenums = result.rankingPlenums.slice(0, 10);
+
+                topPlenums.forEach(p => {
+                    if (p.plenums > 0) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `<td>${this.maskPhone(p.phone)}</td><td>${p.plenums}</td>`;
+                        plenumsBody.appendChild(tr);
+                    }
+                });
+            }
+
+            // --- GAMES PLAYED RANKING ( Top 10 ) ---
+            const gamesBody = document.getElementById('games-ranking-body');
+            if (gamesBody && result.rankingGames && Array.isArray(result.rankingGames)) {
+                gamesBody.innerHTML = '';
+                const topGames = result.rankingGames.slice(0, 10);
+
+                topGames.forEach((p, idx) => {
+                    // Solo mostrar si ha jugado al menos 1 partida
+                    if (p.games > 0) {
+                        const tr = document.createElement('tr');
+                        const isMe = this.state.user.phone && p.phone === this.state.user.phone;
+                        if (isMe) tr.classList.add('highlight-row');
+
+                        tr.innerHTML = `
+                            <td>${idx + 1}</td>
+                            <td>${this.maskPhone(p.phone)}</td>
+                            <td>${p.l || 0}</td>
+                            <td>${p.j || 0}</td>
+                            <td>${p.a || 0}</td>
+                            <td>${p.games}</td>
+                         `;
+                        gamesBody.appendChild(tr);
+                    }
+                });
+            }
+
             // 4. CLASIFICACIÓN POR JUGADOR (Logic: Top 10 + User)
             if (result.ranking && Array.isArray(result.ranking)) {
                 this.state.fullRanking = result.ranking; // Store for full view

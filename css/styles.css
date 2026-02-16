@@ -201,11 +201,11 @@ input[type="tel"] {
     background-color: rgba(0, 150, 136, 0.1);
 }
 
-.team-color-dot {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    margin: 0 auto 0.5rem;
+.question-card p {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: var(--kambia-green);
+    font-weight: bold;
 }
 
 .error-text {
