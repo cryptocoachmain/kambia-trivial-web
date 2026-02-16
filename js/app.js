@@ -538,25 +538,39 @@ const App = {
         // 1. VISUAL FEEDBACK FIRST
         const buttons = this.elements.optionsContainer.querySelectorAll('.option-btn');
         buttons.forEach(btn => {
-            if (btn.dataset.key === correctKey) btn.classList.add('correct');
-            if (btn.dataset.key === selectedKey && !isCorrect) btn.classList.add('wrong');
+            // Highlight selected button based on correctness
+            if (btn.dataset.key === selectedKey) {
+                btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+            }
+            // Always highlight the correct answer
+            if (btn.dataset.key === correctKey) {
+                btn.classList.add('correct');
+            }
         });
 
+        // Update score
         if (isCorrect) {
             this.state.game.score += this.CONSTANTS.POINTS_PER_QUESTION;
             this.state.game.correctCount++;
-            this.showFeedback(true, "¡Correcto!");
-        } else {
-            this.showFeedback(false, "Incorrecto");
         }
 
-        // Update score display immediately
-        this.elements.currentScore.textContent = this.state.game.score;
-
+        // 2. DELAY BEFORE VIDEO (1.5s)
         setTimeout(() => {
-            this.state.game.currentIndex++;
-            this.loadNextQuestion();
-        }, 2000);
+            // Determine video to play
+            const videoFile = isCorrect ? 'assets/correct.mp4' : 'assets/wrong.mp4';
+
+            // Play video
+            VideoPlayer.play(videoFile, false, () => {
+                // After video ends, proceed
+                this.processAnswerResult();
+            });
+        }, 1500);
+    },
+
+    processAnswerResult() {
+        // Move to next question
+        this.state.game.currentIndex++;
+        this.loadNextQuestion();
     },
 
     showFeedback(isCorrect, msg) {
