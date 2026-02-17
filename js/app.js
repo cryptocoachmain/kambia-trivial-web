@@ -646,6 +646,9 @@ const App = {
         this.state.game.isActive = false;
         this.state.game.isOver = true;
 
+        // Stop video if any
+        if (typeof VideoPlayer !== 'undefined') VideoPlayer.stopVideo();
+
         // Hide game screen
         this.elements.gameScreen.classList.add('hidden');
 
