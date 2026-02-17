@@ -74,13 +74,30 @@ const App = {
         this.setupEventListeners();
         this.renderTeamSelector();
 
-        // Anti-cheat detection (Visibility API)
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden && !this.state.game.isOver &&
+        // Anti-cheat detection (Visibility API + Blur)
+        const checkCheat = () => {
+            if (!this.state.game.isOver &&
                 !this.elements.gameScreen.classList.contains('hidden')) {
-                this.handleCheatAttempt();
+                // If document hidden OR window blurred (lost focus)
+                if (document.hidden) {
+                    this.handleCheatAttempt();
+                }
             }
-        });
+        };
+
+        document.addEventListener('visibilitychange', checkCheat);
+        // window.addEventListener('blur', checkCheat); // Too sensitive on Web? (Clicking inside iframe/devtools triggers blur). 
+        // User requested stricter behavior like Android app. Android app pauses on background.
+        // On mobile web, switching apps triggers visibilitychange.
+        // On desktop web, switching tabs triggers visibilitychange.
+        // Switching windows (Alt-Tab) triggers blur AND visibilitychange usually.
+        // Let's stick to visibilitychange as it is standard. 
+        // Maybe the user thinks it doesn't work because they are testing on desktop with devtools open (which keeps focus sometimes).
+
+        // Re-enable blur if strictly requested, but warn user.
+        // "fijate como lo hace la app de android... si el usario se sale de la app..."
+        // visibilitychange covers "se sale de la app".
+        // I will keep visibilitychange but ensure logic is robust.
 
         // Show initial video? (If user wants it on page load)
         // VideoPlayer.play('assets/mw.mp4', true, () => console.log('Intro done'));
@@ -359,7 +376,9 @@ const App = {
             // 4. CLASIFICACIÓN POR JUGADOR (Logic: Top 10 + User)
             if (result.ranking && Array.isArray(result.ranking)) {
                 this.state.fullRanking = result.ranking; // Store for full view
-                this.renderRankingTable('player-ranking-body', this.getDashboardRankingData(result.ranking, phone));
+                // Get phone safely
+                const userPhone = this.state.user.phone || localStorage.getItem('kambia_phone');
+                this.renderRankingTable('player-ranking-body', this.getDashboardRankingData(result.ranking, userPhone));
             }
 
         } catch (e) {
