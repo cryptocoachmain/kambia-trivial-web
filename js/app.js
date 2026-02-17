@@ -631,22 +631,21 @@ const App = {
     },
 
     handleCheatAttempt() {
-        // STOP EVERYTHING IMMEDIATELY
-        VideoPlayer.stopVideo(); // Force hide overlay
-        clearInterval(this.state.game.timer);
-        this.state.game.isOver = true;
-        this.state.game.canAnswer = false;
+        // Only if game is active
+        if (!this.state.game.isActive || this.state.game.isOver) return;
 
-        // Hide game screen instantly to prevent interaction
+        console.warn("Cheat attempt detected: App hidden/blurred");
+
+        // Stop the game locally
+        clearInterval(this.timerInterval);
+        this.state.game.isActive = false;
+        this.state.game.isOver = true;
+
+        // Hide game screen
         this.elements.gameScreen.classList.add('hidden');
 
-        this.elements.cheatWarning.classList.remove('hidden');
-        this.elements.cheatMsg.textContent = "Actividad sospechosa detectada. Partida cancelada.";
-
-        // Expel user and reload to clear state
-        setTimeout(() => {
-            window.location.reload();
-        }, 3000);
+        // Show Expelled Screen
+        this.showScreen('expelled-screen');
     },
 
     async endGame() {
@@ -688,30 +687,26 @@ const App = {
         return phone.substring(0, 2) + "***" + phone.substring(phone.length - 4);
     },
 
-    simulatePhoneDetection() {
-        // Check if phone was stored previously
+    initPhoneInput() {
+        // Real attempt: Trigger Browser Autofill
         const storedPhone = localStorage.getItem('kambia_phone');
 
-        // Disable initially
-        this.elements.phoneInput.disabled = true;
-        this.elements.loginBtn.disabled = true;
-        this.elements.phoneInput.value = "";
-        this.elements.phoneInput.placeholder = "Buscando su número...";
+        // Ensure input is enabled immediately
+        this.elements.phoneInput.disabled = false;
+        this.elements.loginBtn.disabled = true; // Disable until valid phone
+        this.elements.phoneInput.placeholder = "Teléfono móvil";
+        this.elements.phoneInput.value = ""; // Clear initial
 
-        // Simulate waiting for 4 seconds
-        setTimeout(() => {
-            if (storedPhone) {
-                this.elements.phoneInput.value = storedPhone;
-                this.elements.phoneInput.placeholder = "Teléfono móvil";
-                this.elements.phoneInput.disabled = false;
-                this.elements.loginBtn.disabled = false;
-                this.validateLogin();
-            } else {
-                this.elements.phoneInput.placeholder = "Introduzca su número manualmente";
-                this.elements.phoneInput.disabled = false;
+        if (storedPhone) {
+            this.elements.phoneInput.value = storedPhone;
+            this.validateLogin();
+        } else {
+            // Focus immediately to trigger browser suggestions (autocomplete="tel")
+            // Small delay to ensure render
+            setTimeout(() => {
                 this.elements.phoneInput.focus();
-            }
-        }, 4000);
+            }, 300);
+        }
     }
 };
 
