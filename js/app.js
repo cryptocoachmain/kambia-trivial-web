@@ -194,6 +194,35 @@ const App = {
         // Fetch background data
         this.loadAdminMessages();
         this.loadRankings();
+        this.renderTeamBadge();
+    },
+
+    renderTeamBadge() {
+        const card = document.getElementById('my-team-card');
+        if (!card || !this.state.user.team) return;
+
+        const team = this.state.user.team;
+        const teamClass = `text-${team.name.toLowerCase()}`;
+
+        card.innerHTML = `
+            <div class="team-badge-content">
+                <div class="team-badge-info">
+                    <span class="team-badge-label">Jugando con</span>
+                    <span class="team-badge-name ${teamClass}">${team.name}</span>
+                </div>
+                <button id="change-team-btn" class="btn secondary-outline">
+                    <span class="material-icons">swap_horiz</span>
+                    Cambiar Equipo
+                </button>
+            </div>
+        `;
+
+        // Add event listener for change team button
+        document.getElementById('change-team-btn').addEventListener('click', () => {
+            if (confirm('¿Quieres volver a la pantalla de login para cambiar de equipo?')) {
+                this.showScreen('login-screen');
+            }
+        });
     },
 
     showScreen(screenId) {
@@ -658,7 +687,7 @@ const App = {
         el.classList.remove('hidden');
     },
 
-    handleCheatAttempt() {
+    async handleCheatAttempt() {
         // Only if game is active
         if (!this.state.game.isActive || this.state.game.isOver) return;
 
@@ -672,6 +701,20 @@ const App = {
 
         // Stop video if any
         if (typeof VideoPlayer !== 'undefined') VideoPlayer.stopVideo();
+
+        // Upload score with warning
+        try {
+            await API.uploadScore(
+                this.state.user.phone,
+                this.state.user.team.name,
+                0, // score
+                0, // correct answers
+                10, // total questions
+                "3" // warning code for cheat attempt
+            );
+        } catch (e) {
+            console.error("Failed to upload cheat warning", e);
+        }
 
         // Hide game screen
         this.elements.gameScreen.classList.add('hidden');

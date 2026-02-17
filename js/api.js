@@ -63,14 +63,20 @@ const API = {
         return this._request('get_questions');
     },
 
-    async uploadScore(phone, team, score, correct, total) {
-        return this._request('upload', {
+    async uploadScore(phone, team, score, correct, total, warning = null) {
+        const data = {
             telefono: phone,
             equipo: team,
             puntos: score,
             aciertos: correct,
             total: total
-        });
+        };
+
+        if (warning !== null) {
+            data.warning = warning;
+        }
+
+        return this._request('upload', data);
     },
 
     async getRanking(phone = "") {

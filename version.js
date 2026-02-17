@@ -1,7 +1,7 @@
 /**
  * Auto-Update System - Forces cache refresh when app version changes
  */
-const APP_VERSION = "1.0.3"; // Increment this when you deploy changes
+const APP_VERSION = "1.0.4"; // Increment this when you deploy changes
 const VERSION_KEY = "kambia_app_version";
 
 (function () {
