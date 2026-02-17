@@ -445,6 +445,7 @@ const App = {
 
             const isCurrentUser = pPhone === currentUserPhone;
             const rowClass = isCurrentUser ? "current-user-row" : "";
+            const phoneCell = isCurrentUser ? `<strong class="text-kambia">${maskedPhone}</strong>` : maskedPhone;
 
             return `
                 <tr class="${rowClass}">
