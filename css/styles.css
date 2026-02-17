@@ -592,9 +592,26 @@ video {
     margin-bottom: 2rem;
 }
 
-.modal-content.warning .material-icons {
-    font-size: 3rem;
+.title-primary {
+    color: var(--kambia-green);
+    /* Primary Corporate Green */
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
     margin-bottom: 1rem;
+}
+
+.title-secondary {
+    color: var(--kambia-light-green);
+    /* Secondary Corporate Green */
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.text-kambia {
+    color: var(--kambia-green);
 }
 
 /* --- Game Screen Header --- */
