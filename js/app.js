@@ -74,30 +74,21 @@ const App = {
         this.setupEventListeners();
         this.renderTeamSelector();
 
-        // Anti-cheat detection (Visibility API + Blur)
+        // Anti-cheat detection (Strict: Visibility + Blur)
         const checkCheat = () => {
+            // Only active if game is running and screen is visible
             if (!this.state.game.isOver &&
                 !this.elements.gameScreen.classList.contains('hidden')) {
-                // If document hidden OR window blurred (lost focus)
-                if (document.hidden) {
-                    this.handleCheatAttempt();
-                }
+
+                // Trigger cheat handler immediately
+                console.log("Anti-cheat trigger: Focus lost or App hidden");
+                this.handleCheatAttempt();
             }
         };
 
+        // Trigger on tab switch, minimize, OR window focus loss
         document.addEventListener('visibilitychange', checkCheat);
-        // window.addEventListener('blur', checkCheat); // Too sensitive on Web? (Clicking inside iframe/devtools triggers blur). 
-        // User requested stricter behavior like Android app. Android app pauses on background.
-        // On mobile web, switching apps triggers visibilitychange.
-        // On desktop web, switching tabs triggers visibilitychange.
-        // Switching windows (Alt-Tab) triggers blur AND visibilitychange usually.
-        // Let's stick to visibilitychange as it is standard. 
-        // Maybe the user thinks it doesn't work because they are testing on desktop with devtools open (which keeps focus sometimes).
-
-        // Re-enable blur if strictly requested, but warn user.
-        // "fijate como lo hace la app de android... si el usario se sale de la app..."
-        // visibilitychange covers "se sale de la app".
-        // I will keep visibilitychange but ensure logic is robust.
+        window.addEventListener('blur', checkCheat);
 
         // Show initial video? (If user wants it on page load)
         // VideoPlayer.play('assets/mw.mp4', true, () => console.log('Intro done'));
@@ -376,9 +367,15 @@ const App = {
             // 4. CLASIFICACIÓN POR JUGADOR (Logic: Top 10 + User)
             if (result.ranking && Array.isArray(result.ranking)) {
                 this.state.fullRanking = result.ranking; // Store for full view
-                // Get phone safely
-                const userPhone = this.state.user.phone || localStorage.getItem('kambia_phone');
-                this.renderRankingTable('player-ranking-body', this.getDashboardRankingData(result.ranking, userPhone));
+
+                // Fix: Ensure we have a valid phone string, even if empty
+                const userPhone = this.state.user.phone || localStorage.getItem('kambia_phone') || "";
+
+                // Get display data (Top 10 + User)
+                const displayData = this.getDashboardRankingData(result.ranking, userPhone);
+
+                // Render
+                this.renderRankingTable('player-ranking-body', displayData);
             }
 
         } catch (e) {
@@ -663,6 +660,7 @@ const App = {
         clearInterval(this.timerInterval);
         this.state.game.isActive = false;
         this.state.game.isOver = true;
+        this.state.game.score = 0; // Reset score to 0 (Penalty)
 
         // Stop video if any
         if (typeof VideoPlayer !== 'undefined') VideoPlayer.stopVideo();
