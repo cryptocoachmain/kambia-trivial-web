@@ -85,7 +85,7 @@ const App = {
         // Show initial video? (If user wants it on page load)
         // VideoPlayer.play('assets/mw.mp4', true, () => console.log('Intro done'));
 
-        this.simulatePhoneDetection();
+        this.initPhoneInput();
         this.loadRankings(); // Load rankings on init
     },
 
