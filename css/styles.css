@@ -258,6 +258,47 @@ input[type="tel"] {
     cursor: pointer;
 }
 
+/* Team Specific Styles */
+.text-loyola,
+.text-Loyola {
+    color: var(--team-red) !important;
+    font-weight: bold;
+}
+
+.text-javier,
+.text-Javier {
+    color: var(--team-yellow) !important;
+    font-weight: bold;
+}
+
+.text-avila,
+.text-Avila {
+    color: var(--team-blue) !important;
+    font-weight: bold;
+}
+
+.bg-loyola,
+.bg-Loyola {
+    background-color: var(--team-red) !important;
+    color: white !important;
+    border-color: var(--team-red) !important;
+}
+
+.bg-javier,
+.bg-Javier {
+    background-color: var(--team-yellow) !important;
+    color: black !important;
+    border-color: var(--team-yellow) !important;
+}
+
+/* Black text for yellow contrast */
+.bg-avila,
+.bg-Avila {
+    background-color: var(--team-blue) !important;
+    color: white !important;
+    border-color: var(--team-blue) !important;
+}
+
 .ranking-row {
     display: flex;
     justify-content: space-between;
@@ -517,6 +558,38 @@ video {
     border-radius: 8px;
     text-align: center;
     color: var(--error-color);
+}
+
+.expelled-screen {
+    background-color: white;
+    padding: 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.expelled-icon {
+    font-size: 4rem;
+    color: var(--error-color);
+    margin-bottom: 1.5rem;
+}
+
+.expelled-title {
+    font-size: 1.5rem;
+    color: var(--error-color);
+    margin-bottom: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.expelled-message {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin-bottom: 2rem;
 }
 
 .modal-content.warning .material-icons {

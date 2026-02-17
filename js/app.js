@@ -144,15 +144,22 @@ const App = {
         this.elements.teamSelector.innerHTML = '';
         this.CONSTANTS.TEAMS.forEach(team => {
             const div = document.createElement('div');
-            div.className = 'team-item';
-            div.innerHTML = `
-                <div class="team-color-dot" style="background-color: ${team.color}"></div>
-                <span>${team.name}</span>
-            `;
+            // Add specific color class for text always
+            div.className = `team-item text-${team.name}`;
+            div.innerHTML = `<span>${team.name}</span>`;
+
             div.addEventListener('click', () => {
-                // Deselect others
-                document.querySelectorAll('.team-item').forEach(el => el.classList.remove('selected'));
+                // Deselect others and remove bg classes
+                document.querySelectorAll('.team-item').forEach(el => {
+                    el.classList.remove('selected');
+                    el.classList.remove('bg-Loyola', 'bg-Javier', 'bg-Avila');
+                    el.classList.remove('bg-loyola', 'bg-javier', 'bg-avila');
+                });
+
+                // Select this one
                 div.classList.add('selected');
+                div.classList.add(`bg-${team.name}`);
+
                 this.state.user.team = team;
                 this.elements.teamError.classList.add('hidden');
                 this.validateLogin();
