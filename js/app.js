@@ -414,50 +414,47 @@ const App = {
 
     renderRankingTable(targetId, data) {
         const tbody = document.getElementById(targetId);
-        if (!tbody) return;
+        if (!tbody) {
+            console.error('renderRankingTable: tbody not found for', targetId);
+            return;
+        }
+
+        if (!data || data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No hay datos disponibles</td></tr>';
+            return;
+        }
 
         const currentUserPhone = this.state.user.phone ? this.state.user.phone.slice(-9) : "";
 
-        tbody.innerHTML = data.map((player, idx) => {
-            // Determine rank display: use 'realRank' if set (for appended user), else idx + 1
-            const rank = player.realRank || (idx + 1); // Note: idx matches position for Top 10
-            // If we are rendering the FULL list (where realRank might not be set on everyone individually), 
-            // we rely on the index passed to map if we passed the full sorted array.
-            // But wait, renderRankingTable receives a 'data' array. 
-            // If it's the dashboard list, 'data' is the constructed list.
-            // If it's the full list, 'data' is the full array.
+        try {
+            tbody.innerHTML = data.map((player, idx) => {
+                // Use realRank if set (for users outside top 10), otherwise use position in current list
+                const displayRank = player.realRank || (idx + 1);
 
-            // Fix: calculate rank based on the player object's position in the original full list if possible?
-            // Actually, for the dashboard list, we manually added 'realRank' to the user. 
-            // For the top 10, their index in 'data' IS their rank (0->1, 1->2).
-            // So logic: if(player.realRank) return player.realRank; else return idx + 1;
-            // This works for Top 10 (idx 0-9) and User (idx 10, realRank X).
-            // For Full List, we won't have 'realRank' set, so idx+1 works perfectly.
+                const pPhone = player.phone ? player.phone.slice(-9) : "000000000";
+                const maskedPhone = pPhone.length >= 9
+                    ? pPhone.substring(0, 2) + "***" + pPhone.substring(5)
+                    : pPhone;
 
-            const displayRank = player.realRank || (this.state.fullRanking.indexOf(player) + 1);
+                const isCurrentUser = pPhone === currentUserPhone;
+                const rowClass = isCurrentUser ? "current-user-row" : "";
+                const phoneCell = isCurrentUser ? `<strong class="text-kambia">${maskedPhone}</strong>` : maskedPhone;
 
-            const pPhone = player.phone ? player.phone.slice(-9) : "000000000";
-            // Masking: 1st, 2nd, [***], 6th, 7th, 8th, 9th
-            // Index: 0, 1, [2,3,4], 5, 6, 7, 8
-            const maskedPhone = pPhone.length >= 9
-                ? pPhone.substring(0, 2) + "***" + pPhone.substring(5)
-                : pPhone;
-
-            const isCurrentUser = pPhone === currentUserPhone;
-            const rowClass = isCurrentUser ? "current-user-row" : "";
-            const phoneCell = isCurrentUser ? `<strong class="text-kambia">${maskedPhone}</strong>` : maskedPhone;
-
-            return `
-                <tr class="${rowClass}">
-                    <td>${displayRank}</td>
-                    <td>${phoneCell}</td>
-                    <td class="text-loyola">${player.l || 0}</td>
-                    <td class="text-javier">${player.j || 0}</td>
-                    <td class="text-avila">${player.a || 0}</td>
-                    <td><strong>${player.total || player.t || 0}</strong></td>
-                </tr>
-            `;
-        }).join('');
+                return `
+                    <tr class="${rowClass}">
+                        <td>${displayRank}</td>
+                        <td>${phoneCell}</td>
+                        <td class="text-loyola">${player.l || 0}</td>
+                        <td class="text-javier">${player.j || 0}</td>
+                        <td class="text-avila">${player.a || 0}</td>
+                        <td><strong>${player.total || player.t || 0}</strong></td>
+                    </tr>
+                `;
+            }).join('');
+        } catch (error) {
+            console.error('Error in renderRankingTable:', error);
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Error al renderizar tabla</td></tr>';
+        }
     },
 
     showFullRanking() {

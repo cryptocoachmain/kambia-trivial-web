@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kambia Debug Test</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Kambia Web App - Debug Test</h1>
+
+    <h2>Test 1: Anti-Cheat Detection</h2>
+    <button id="startTest" onclick="testAntiCheat()">Start Game & Test Anti-Cheat</button>
+    <div id="cheatResult"></div>
+
+    <h2>Test 2: Ranking Table Rendering</h2>
+    <button onclick="testRanking()">Test Ranking Render</button>
+    <table id="test-ranking">
+        <thead>
+            <tr>
+                <th>Pos</th>
+                <th>Teléfono</th>
+                <th>Loy</th>
+                <th>Jav</th>
+                <th>Avi</th>
+                <th>Tot</th>
+            </tr>
+        </thead>
+        <tbody id="player-ranking-body"></tbody>
+    </table>
+
+    <h2>Console Output:</h2>
+    <pre id="console" style="background: #f5f5f5; padding: 10px; max-height: 300px; overflow-y: auto;"></pre>
+
+    <script>
+        // Mock data
+        const mockRankingData = [
+            { phone: "612345678", l: 50, j: 30, a: 20, total: 100, t: 100 },
+            { phone: "623456789", l: 40, j: 40, a: 30, total: 110, t: 110 },
+            { phone: "634567890", l: 60, j: 20, a: 10, total: 90, t: 90 }
+        ];
+
+        const log = (msg, type = 'info') => {
+            const consoleEl = document.getElementById('console');
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'black';
+            consoleEl.innerHTML += `<span style="color: ${color}">[${timestamp}] ${msg}</span>\n`;
+            console.log(msg);
+        };
+
+        // Test Anti-Cheat
+        let gameState = {
+            isActive: false,
+            isOver: false,
+            timer: null
+        };
+
+        function testAntiCheat() {
+            log('Starting game...', 'info');
+            gameState.isActive = true;
+            gameState.isOver = false;
+
+            log('Game state: isActive=' + gameState.isActive + ', isOver=' + gameState.isOver, 'info');
+
+            // Setup listeners
+            const checkCheat = () => {
+                log('checkCheat called - document.hidden=' + document.hidden, 'info');
+                if (!gameState.isOver && gameState.isActive) {
+                    log('Anti-cheat TRIGGERED!', 'success');
+                    document.getElementById('cheatResult').innerHTML = '<span class="success">✓ Anti-cheat working! Game would be terminated.</span>';
+                    gameState.isActive = false;
+                    gameState.isOver = true;
+                } else {
+                    log('Anti-cheat conditions not met: isOver=' + gameState.isOver + ', isActive=' + gameState.isActive, 'error');
+                }
+            };
+
+            document.addEventListener('visibilitychange', checkCheat);
+            window.addEventListener('blur', checkCheat);
+
+            log('Anti-cheat listeners registered. Switch tabs or windows to test!', 'info');
+            document.getElementById('cheatResult').innerHTML = '<span style="color: orange;">⚠ Switch to another tab/window to test anti-cheat...</span>';
+        }
+
+        // Test Ranking Render
+        function testRanking() {
+            log('Testing ranking render...', 'info');
+
+            const tbody = document.getElementById('player-ranking-body');
+            if (!tbody) {
+                log('ERROR: tbody not found!', 'error');
+                return;
+            }
+
+            const currentUserPhone = "612345678";
+            const fullRanking = mockRankingData;
+
+            try {
+                tbody.innerHTML = mockRankingData.map((player, idx) => {
+                    const displayRank = player.realRank || (fullRanking.indexOf(player) + 1);
+                    const pPhone = player.phone ? player.phone.slice(-9) : "000000000";
+                    const maskedPhone = pPhone.substring(0, 2) + "***" + pPhone.substring(5);
+                    const isCurrentUser = pPhone === currentUserPhone;
+                    const rowClass = isCurrentUser ? "current-user-row" : "";
+                    const phoneCell = isCurrentUser ? `<strong>${maskedPhone}</strong>` : maskedPhone;
+
+                    return `
+                        <tr class="${rowClass}" style="${isCurrentUser ? 'background-color: #e8f5e9;' : ''}">
+                            <td>${displayRank}</td>
+                            <td>${phoneCell}</td>
+                            <td>${player.l || 0}</td>
+                            <td>${player.j || 0}</td>
+                            <td>${player.a || 0}</td>
+                            <td><strong>${player.total || player.t || 0}</strong></td>
+                        </tr>
+                    `;
+                }).join('');
+
+                log('Ranking rendered successfully! ' + mockRankingData.length + ' rows', 'success');
+            } catch (error) {
+                log('ERROR rendering ranking: ' + error.message, 'error');
+                log('Stack: ' + error.stack, 'error');
+            }
+        }
+
+        // Auto-test on load
+        window.onload = () => {
+            log('Page loaded. Ready for testing.', 'info');
+            testRanking();
+        };
+    </script>
+</body>
+
+</html>
