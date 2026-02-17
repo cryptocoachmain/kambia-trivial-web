@@ -62,12 +62,14 @@
                     <p class="small-text">(donar, fundaciones, organizaciones sin ánimo de lucro...)</p>
                 </div>
 
-                <button id="start-app-btn" class="btn primary">EMPEZAR</button>
-
                 <div class="sponsored-box">
                     <p class="label">PATROCINADO POR</p>
                     <p class="content">Aquí su Publicidad</p>
                 </div>
+
+                <div class="spacer" style="height: 1rem;"></div>
+
+                <button id="start-app-btn" class="btn primary">EMPEZAR</button>
             </div>
         </section>
 
@@ -102,16 +104,16 @@
 
                 <!-- Presencial Scores -->
                 <div class="card">
-                    <h3>SPORTS LEIOA PRESENCIALES</h3>
+                    <h3 class="title-primary">SPORTS LEIOA PRESENCIALES</h3>
                     <div id="presencial-ranking-list">
                         <!-- Injected by JS -->
-                        <div class="ranking-row"><span class="red">1. Loyola</span><span>0 pts</span></div>
-                        <div class="ranking-row"><span class="yellow">2. Javier</span><span>0 pts</span></div>
-                        <div class="ranking-row"><span class="blue">3. Avila</span><span>0 pts</span></div>
+                        <div class="ranking-row"><span class="text-loyola">1. Loyola</span><span>0 pts</span></div>
+                        <div class="ranking-row"><span class="text-javier">2. Javier</span><span>0 pts</span></div>
+                        <div class="ranking-row"><span class="text-avila">3. Avila</span><span>0 pts</span></div>
                     </div>
                 </div>
 
-                <h3>SPORTS LEIOA ONLINE</h3>
+                <h3 class="title-primary">SPORTS LEIOA ONLINE</h3>
 
                 <!-- Current Team Badge -->
                 <div class="card team-badge-card" id="my-team-card">
@@ -121,14 +123,14 @@
                 <!-- Online Scoreboard -->
                 <div class="card">
                     <img src="assets/maryward_header.png" alt="Mary Ward" class="card-image" id="mary-ward-img">
-                    <h3>CLASIFICACIÓN TOTAL</h3>
+                    <h3 class="title-secondary">CLASIFICACIÓN TOTAL</h3>
                     <div id="global-ranking-list">
                         <!-- Injected by JS -->
                     </div>
 
                     <div class="divider"></div>
 
-                    <h3>TU PUNTUACIÓN PERSONAL</h3>
+                    <h3 class="title-secondary">TU PUNTUACIÓN PERSONAL</h3>
                     <div id="user-scores-list">
                         <!-- Injected by JS -->
                     </div>
@@ -136,7 +138,7 @@
 
                 <!-- Plenums Ranking -->
                 <div class="card" id="plenums-ranking-card">
-                    <h3>CLASIFICACIÓN POR PLENOS 10/10</h3>
+                    <h3 class="title-secondary">CLASIFICACIÓN POR PLENOS 10/10</h3>
                     <table class="ranking-table">
                         <thead>
                             <tr>
@@ -152,15 +154,15 @@
 
                 <!-- Games Played Ranking -->
                 <div class="card" id="games-ranking-card">
-                    <h3>CLASIFICACIÓN POR PARTIDAS JUGADAS</h3>
+                    <h3 class="title-secondary">CLASIFICACIÓN POR PARTIDAS JUGADAS</h3>
                     <table class="ranking-table">
                         <thead>
                             <tr>
                                 <th>Pos</th>
                                 <th>Teléfono</th>
-                                <th>Loy</th>
-                                <th>Jav</th>
-                                <th>Avi</th>
+                                <th class="text-loyola">Loy</th>
+                                <th class="text-javier">Jav</th>
+                                <th class="text-avila">Avi</th>
                                 <th>Partidas</th>
                             </tr>
                         </thead>
@@ -172,15 +174,15 @@
 
                 <!-- Player Ranking -->
                 <div class="card" id="player-ranking-card">
-                    <h3>CLASIFICACIÓN POR JUGADOR</h3>
+                    <h3 class="title-secondary">CLASIFICACIÓN POR JUGADOR</h3>
                     <table class="ranking-table">
                         <thead>
                             <tr>
                                 <th>Pos</th>
                                 <th>Teléfono</th>
-                                <th class="red">Loy</th>
-                                <th class="yellow">Jav</th>
-                                <th class="blue">Avi</th>
+                                <th class="text-loyola">Loy</th>
+                                <th class="text-javier">Jav</th>
+                                <th class="text-avila">Avi</th>
                                 <th>Tot</th>
                             </tr>
                         </thead>
