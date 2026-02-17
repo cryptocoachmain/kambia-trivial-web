@@ -133,11 +133,7 @@ const App = {
         this.elements.prevMsgBtn.addEventListener('click', () => this.navigateMessage(-1));
         this.elements.nextMsgBtn.addEventListener('click', () => this.navigateMessage(1));
 
-        // Report Issue (Demo)
-        document.getElementById('report-issue-btn').addEventListener('click', () => {
-            alert('Funcionalidad de reporte por implementar (abrir cliente correo).');
-            window.location.href = "mailto:hola@fundacionkambia.org?subject=Incidencia Trivial Web";
-        });
+
     },
 
     renderTeamSelector() {
@@ -146,7 +142,10 @@ const App = {
             const div = document.createElement('div');
             // Add specific color class for text always
             div.className = `team-item text-${team.name}`;
-            div.innerHTML = `<span>${team.name}</span>`;
+            div.innerHTML = `
+                <div class="team-color-dot" style="background-color: ${team.color}"></div>
+                <span>${team.name}</span>
+            `;
 
             div.addEventListener('click', () => {
                 // Deselect others and remove bg classes
