@@ -478,6 +478,7 @@ const App = {
             timer: null,
             timeLeft: 100,
             isOver: false,
+            isActive: true, // Mark game as active for cheat detection
             canAnswer: false
         };
 
