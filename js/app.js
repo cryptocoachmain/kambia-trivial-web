@@ -337,14 +337,19 @@ const App = {
                     if (p.games > 0) {
                         const tr = document.createElement('tr');
                         const isMe = this.state.user.phone && p.phone === this.state.user.phone;
-                        if (isMe) tr.classList.add('highlight-row');
+                        if (isMe) tr.classList.add('current-user-row');
+
+                        const pPhone = p.phone ? p.phone.slice(-9) : "000000000";
+                        const masked = this.maskPhone(pPhone);
+                        // Highlight Logic
+                        const displayPhone = isMe ? `<strong class="text-kambia">${masked}</strong>` : masked;
 
                         tr.innerHTML = `
                             <td>${idx + 1}</td>
-                            <td>${this.maskPhone(p.phone)}</td>
-                            <td>${p.l || 0}</td>
-                            <td>${p.j || 0}</td>
-                            <td>${p.a || 0}</td>
+                            <td>${displayPhone}</td>
+                            <td class="text-loyola">${p.gl || 0}</td>
+                            <td class="text-javier">${p.gj || 0}</td>
+                            <td class="text-avila">${p.ga || 0}</td>
                             <td>${p.games}</td>
                          `;
                         gamesBody.appendChild(tr);
@@ -420,11 +425,11 @@ const App = {
             return `
                 <tr class="${rowClass}">
                     <td>${displayRank}</td>
-                    <td>${maskedPhone}</td>
-                    <td class="red">${player.l || 0}</td>
-                    <td class="yellow">${player.j || 0}</td>
-                    <td class="blue">${player.a || 0}</td>
-                    <td><strong>${player.t || 0}</strong></td>
+                    <td>${phoneCell}</td>
+                    <td class="text-loyola">${player.l || 0}</td>
+                    <td class="text-javier">${player.j || 0}</td>
+                    <td class="text-avila">${player.a || 0}</td>
+                    <td><strong>${player.total || player.t || 0}</strong></td>
                 </tr>
             `;
         }).join('');
