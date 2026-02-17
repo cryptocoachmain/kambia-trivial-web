@@ -375,7 +375,16 @@ const App = {
                 const displayData = this.getDashboardRankingData(result.ranking, userPhone);
 
                 // Render
-                this.renderRankingTable('player-ranking-body', displayData);
+                if (displayData.length === 0) {
+                    const tbody = document.getElementById('player-ranking-body');
+                    if (tbody) tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No hay datos de clasificación disponibles</td></tr>';
+                } else {
+                    this.renderRankingTable('player-ranking-body', displayData);
+                }
+            } else {
+                // Fallback if ranking missing
+                const tbody = document.getElementById('player-ranking-body');
+                if (tbody) tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Cargando o sin datos...</td></tr>';
             }
 
         } catch (e) {
@@ -657,7 +666,7 @@ const App = {
         console.warn("Cheat attempt detected: App hidden/blurred");
 
         // Stop the game locally
-        clearInterval(this.timerInterval);
+        if (this.state.game.timer) clearInterval(this.state.game.timer);
         this.state.game.isActive = false;
         this.state.game.isOver = true;
         this.state.game.score = 0; // Reset score to 0 (Penalty)
